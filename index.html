@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-f07739098a39bd4e74ddd974652dac904146f33fdc1ecab356e8c809a05faccb.js"></script>
+
+
+  <title>FluxPad - A beautiful frontend website</title>
+
+    <link rel="canonical" href="https://codepen.io/CleanCodeStudio/pen/MYjRyWK">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #090b12;
+  --bg2: #111522;
+  --card: #111625;
+  --line: #22293c;
+  --text: #f5f7ff;
+  --muted: #95a0bd;
+  --primary: #6d7cff;
+  --primary2: #8b5cf6;
+  --shadow: 0 10px 30px rgba(0,0,0,.28);
+  --wrap: min(1040px, 95%); /* more fluid wrapper */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(109,124,255,.18), transparent 25%),
+    radial-gradient(circle at right top, rgba(139,92,246,.16), transparent 25%),
+    linear-gradient(180deg, #080a10 0%, #0c1020 100%);
+  overflow-x: hidden;
+}
+
+.topbar,
+main,
+.footer {
+  width: var(--wrap);
+  margin: auto;
+}
+
+.topbar {
+  margin-top: 14px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  background: rgba(14,18,30,.78);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  position: sticky;
+  top: 10px;
+  z-index: 10;
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+.logo span {
+  color: var(--primary);
+}
+
+.nav,
+.actions,
+.hero-buttons,
+.footer-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nav a,
+.footer-links a {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: .92rem;
+  transition: .25s;
+}
+.nav a:hover,
+.footer-links a:hover {
+  color: var(--text);
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: .25s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn.primary {
+  color: #fff;
+  background: linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow: 0 8px 22px rgba(109,124,255,.24);
+}
+.btn.ghost {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line);
+}
+.btn.full {
+  width: 100%;
+}
+
+main {
+  margin-top: 18px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: center;
+  padding: 16px 0 8px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line);
+  color: #c7d0ff;
+  font-size: .82rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+h1 {
+  font-size: clamp(2rem,4vw,3.7rem);
+  line-height: 1.08;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: clamp(1.45rem,2.8vw,2.4rem);
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: .96rem;
+}
+
+.stats {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stats strong {
+  font-size: 1.05rem;
+}
+.stats span {
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.hero-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.screen {
+  width: 100%;
+  max-width: 460px;
+  background: linear-gradient(180deg,#12192a,#0f1422);
+  border: 1px solid #232c41;
+  border-radius: 24px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+
+.screen-top {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.screen-top span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2c3550;
+}
+.screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.panel {
+  background: #0c111d;
+  border: 1px solid #1f2740;
+  border-radius: 18px;
+  padding: 14px;
+  min-height: 112px;
+}
+.panel.tall {min-height: 174px;}
+.panel.wide {grid-column: 1 / -1;}
+.panel ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  color: #c8d0ea;
+  font-size: .9rem;
+}
+.bars {
+  height: 88px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.bars i {
+  display: block;
+  width: 22px;
+  border-radius: 8px 8px 4px 4px;
+  background: linear-gradient(180deg,var(--primary),var(--primary2));
+}
+.task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #c8d0ea;
+  font-size: .9rem;
+  margin-top: 10px;
+}
+.task span {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(135deg,var(--primary),var(--primary2));
+}
+
+.brands {
+  margin-top: 16px;
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  color: var(--muted);
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.02);
+}
+
+.section {margin-top: 24px;}
+.section-head {margin-bottom: 14px;}
+.section-head.center {text-align: center;}
+
+.feature-grid,
+.pricing-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.feature-grid {grid-template-columns: repeat(3,1fr);}
+.pricing-grid {grid-template-columns: repeat(3,1fr);}
+
+.card,
+.price-card,
+.contact-box {
+  background: linear-gradient(180deg,#111625,#0d1220);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: #171f35;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.check-list {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 16px;
+  color: #d3daf1;
+  font-weight: 600;
+}
+
+.showcase-card {
+  border: 1px solid var(--line
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <header class="topbar">
+  <div class="logo">Flux<span>Pad</span></div>
+
+  <nav class="nav">
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="actions">
+    <button class="btn ghost">Log in</button>
+    <button class="btn primary">Buy Now</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-copy">
+      <div class="tag">New tablet-first workspace</div>
+      <h1>Manage your product life in one dark dashboard.</h1>
+      <p>FluxPad helps teams plan, track and launch products with a clean interface made for modern devices.</p>
+
+      <div class="hero-buttons">
+        <button class="btn primary" id="demoBtn">Watch Demo</button>
+        <a href="#pricing" class="btn ghost">See Pricing</a>
+      </div>
+
+      <div class="stats">
+        <div><strong>18k+</strong><span>teams</span></div>
+        <div><strong>4.9/5</strong><span>rating</span></div>
+        <div><strong>99.9%</strong><span>uptime</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="screen">
+        <div class="screen-top">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="screen-grid">
+          <div class="panel tall">
+            <h3>Roadmap</h3>
+            <ul>
+              <li>Q1 Launch</li>
+              <li>UX Polish</li>
+              <li>Team Sync</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Growth</h3>
+            <div class="bars">
+              <i style="height:45%"></i>
+              <i style="height:70%"></i>
+              <i style="height:55%"></i>
+              <i style="height:88%"></i>
+            </div>
+          </div>
+          <div class="panel wide">
+            <h3>Tasks</h3>
+            <div class="task"><span></span> Build landing page</div>
+            <div class="task"><span></span> Review analytics</div>
+            <div class="task"><span></span> Ship update</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="brands">
+    <span>Used by</span>
+    <b>NovaCore</b>
+    <b>PixelMint</b>
+    <b>OrbitLab</b>
+    <b>ZenithOS</b>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-head">
+      <h2>Built for product teams</h2>
+      <p>Simple blocks, strong contrast, fast workflow.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="card">
+        <div class="icon">⚡</div>
+        <h3>Fast Planning</h3>
+        <p>Create product sprints, roadmaps and docs in seconds.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">📊</div>
+        <h3>Live Metrics</h3>
+        <p>Track growth, releases and usage in one compact space.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🤝</div>
+        <h3>Team Ready</h3>
+        <p>Assign tasks, share notes and keep everyone aligned.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section showcase">
+    <div class="showcase-copy">
+      <h2>Compact UI that still feels premium</h2>
+      <p>Made to look good on tabs, full view and smaller previews too.</p>
+
+      <div class="check-list">
+        <div>✓ Clean dark cards</div>
+        <div>✓ Preview-friendly spacing</div>
+        <div>✓ Tablet-first layout</div>
+      </div>
+
+      <a href="#contact" class="btn primary">Start Project</a>
+    </div>
+
+    <div class="showcase-card">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80" alt="workspace">
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="section-head center">
+      <h2>Pricing</h2>
+      <p>Choose the plan that fits your team.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Starter</h3>
+        <div class="price">$0 <span>/mo</span></div>
+        <ul>
+          <li>3 projects</li>
+          <li>Basic analytics</li>
+          <li>Email support</li>
+        </ul>
+        <button class="btn ghost full">Start Free</button>
+      </div>
+
+      <div class="price-card featured">
+        <div class="badge">Popular</div>
+        <h3>Pro</h3>
+        <div class="price">$19 <span>/mo</span></div>
+        <ul>
+          <li>Unlimited projects</li>
+          <li>Advanced insights</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn primary full">Get Pro</button>
+      </div>
+
+      <div class="price-card">
+        <h3>Team</h3>
+        <div class="price">$49 <span>/mo</span></div>
+        <ul>
+          <li>Team spaces</li>
+          <li>Admin tools</li>
+          <li>Private boards</li>
+        </ul>
+        <button class="btn ghost full">Choose Team</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact" id="contact">
+    <div class="contact-box">
+      <h2>Ready to launch faster?</h2>
+      <p>Join teams building better products with FluxPad.</p>
+      <div class="hero-buttons">
+        <button class="btn primary">Book Demo</button>
+        <button class="btn ghost">Contact Sales</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>© 2026 FluxPad</span>
+  <div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+</footer>
+  
+    <script id="rendered-js" >
+document.getElementById("demoBtn").addEventListener("click", () => {
+  alert("FluxPad demo opening soon 🚀");
+});
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>
